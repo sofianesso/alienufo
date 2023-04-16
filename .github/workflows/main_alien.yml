@@ -26,12 +26,15 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-
+      - name: Create ZIP artifact
+        run: |
+          zip -r node-app.zip .
+          ls -lh node-app.zip
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: node-app.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,4 +56,4 @@ jobs:
           app-name: 'alien'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_08808C9FA8904FC1BE5A36A23787A838 }}
-          package: .
+          package: node-app.zip
